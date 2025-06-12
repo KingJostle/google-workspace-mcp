@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
-import { ApiRequestParams, GoogleApiError } from '../types.js';
+import { GoogleApiRequestParams, GoogleApiError } from '../types.js';
 
 interface ServiceVersionMap {
   [key: string]: string;
@@ -16,12 +16,12 @@ export class GoogleApiRequest {
 
   constructor(private authClient: OAuth2Client) {}
 
-  async makeRequest({
-    endpoint,
-    method,
-    params = {},
-    token
-  }: ApiRequestParams): Promise<any> {
+async makeRequest({
+  endpoint,
+  method,
+  params = {},
+  token
+}: GoogleApiRequestParams): Promise<any> {
     try {
       // Set up authentication
       this.authClient.setCredentials({
