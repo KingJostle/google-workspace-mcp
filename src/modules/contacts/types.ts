@@ -1,73 +1,136 @@
+// Add these types to your existing contacts/types.ts file
+
 /**
- * Parameters for retrieving contacts.
+ * Parameters for creating a new contact
  */
-export interface GetContactsParams {
-  email: string; // The user account email
-  pageSize?: number; // Max number of contacts to return
-  pageToken?: string; // Token for pagination
-  // Add other parameters like sortOrder, syncToken if needed later
-  personFields: string; // Required: Fields to request e.g. 'names,emailAddresses,phoneNumbers'
+export interface CreateContactParams {
+  email: string;
+  contact: {
+    names?: Array<{
+      givenName?: string;
+      familyName?: string;
+      displayName?: string;
+      middleName?: string;
+    }>;
+    emailAddresses?: Array<{
+      value: string;
+      type?: string;
+      formattedType?: string;
+    }>;
+    phoneNumbers?: Array<{
+      value: string;
+      type?: string;
+      formattedType?: string;
+    }>;
+    addresses?: Array<{
+      streetAddress?: string;
+      city?: string;
+      region?: string;
+      postalCode?: string;
+      country?: string;
+      type?: string;
+    }>;
+    organizations?: Array<{
+      name?: string;
+      title?: string;
+      department?: string;
+      type?: string;
+    }>;
+    biographies?: Array<{
+      value: string;
+      contentType?: string;
+    }>;
+  };
 }
 
 /**
- * Response structure for getting contacts.
+ * Response from creating a contact
  */
-export interface GetContactsResponse {
-  connections: Contact[];
-  nextPageToken?: string;
-  totalPeople?: number;
-  totalItems?: number; // Deprecated
-}
-
-/**
- * Represents a Google Contact (Person).
- * Based on People API Person resource.
- * Reference: https://developers.google.com/people/api/rest/v1/people#Person
- */
-export interface Contact {
+export interface CreateContactResponse {
   resourceName: string;
-  etag?: string;
-  names?: Name[];
-  emailAddresses?: EmailAddress[];
-  phoneNumbers?: PhoneNumber[];
-  // Add other fields as needed (e.g. photos, addresses, organizations, etc.)
-}
-
-// --- Sub-types based on People API ---
-
-export interface Name {
-  displayName?: string;
-  familyName?: string;
-  givenName?: string;
-  // ... other name fields
-}
-
-export interface EmailAddress {
-  value?: string;
-  type?: string; // e.g. 'home', 'work'
-  formattedType?: string;
-  // ... other email fields
-}
-
-export interface PhoneNumber {
-  value?: string;
-  canonicalForm?: string;
-  type?: string; // e.g. 'mobile', 'home', 'work'
-  formattedType?: string;
-  // ... other phone fields
+  etag: string;
+  contact: any; // Full contact object returned from API
 }
 
 /**
- * Base error class for Contacts service.
+ * Parameters for updating an existing contact
  */
-export class ContactsError extends Error {
-  code: string;
-  details?: string;
+export interface UpdateContactParams {
+  email: string;
+  resourceName: string;
+  contact: {
+    etag?: string; // Required for updates to prevent conflicts
+    names?: Array<{
+      givenName?: string;
+      familyName?: string;
+      displayName?: string;
+      middleName?: string;
+    }>;
+    emailAddresses?: Array<{
+      value: string;
+      type?: string;
+      formattedType?: string;
+    }>;
+    phoneNumbers?: Array<{
+      value: string;
+      type?: string;
+      formattedType?: string;
+    }>;
+    addresses?: Array<{
+      streetAddress?: string;
+      city?: string;
+      region?: string;
+      postalCode?: string;
+      country?: string;
+      type?: string;
+    }>;
+    organizations?: Array<{
+      name?: string;
+      title?: string;
+      department?: string;
+      type?: string;
+    }>;
+    biographies?: Array<{
+      value: string;
+      contentType?: string;
+    }>;
+  };
+  updatePersonFields?: string; // Fields to update, e.g., 'names,emailAddresses,phoneNumbers'
+}
 
-  constructor(message: string, code: string, details?: string) {
-    super(message);
-    this.name = "ContactsError";
-    this.code = code;
-    this.details = details;
-  }
+/**
+ * Response from updating a contact
+ */
+export interface UpdateContactResponse {
+  resourceName: string;
+  etag: string;
+  contact: any; // Full updated contact object returned from API
+}
+
+/**
+ * Parameters for deleting a contact
+ */
+export interface DeleteContactParams {
+  email: string;
+  resourceName: string;
+}
+
+/**
+ * Parameters for searching contacts
+ */
+export interface SearchContactsParams {
+  email: string;
+  query: string;
+  pageSize?: number;
+  readMask?: string;
+}
+
+/**
+ * Response from searching contacts
+ */
+export interface SearchContactsResponse {
+  results?: Array<{
+    person: any; // Contact object
+  }>;
+  nextPageToken?: string;
 }
