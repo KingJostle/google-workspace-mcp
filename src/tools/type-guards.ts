@@ -1,5 +1,5 @@
 import {
-BaseToolArguments,
+  BaseToolArguments,
   CalendarEventParams,
   SendEmailArgs,
   ManageLabelParams,
@@ -15,17 +15,14 @@ BaseToolArguments,
   DriveDeleteArgs,
   ManageAttachmentParams
 } from './types.js';
+
 import {
   GetContactsParams,
   CreateContactParams,
   UpdateContactParams,
-  SearchContactsParams
-} from '../modules/contacts/types.js';
-  CreateContactParams,
-  UpdateContactParams,
   DeleteContactParams,
   SearchContactsParams
-} from '../modules/contacts/types.js'; //
+} from '../modules/contacts/types.js';
 
 // Base Tool Arguments
 export function isBaseToolArguments(args: Record<string, unknown>): args is BaseToolArguments {
