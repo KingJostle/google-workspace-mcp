@@ -114,11 +114,13 @@ function assertCreateContactParams(args: any): asserts args is { email: string; 
   }
 }
 
-function assertUpdateContactParams(args: any): asserts args is { 
+function assertSearchContactsParams(args: any): asserts args is { 
   email: string; 
-  resourceName: string; 
-  contact: any; 
-  updatePersonFields?: string 
+  personFields: string;
+  query?: string;  // Optional - matches tool definition
+  pageSize?: number;
+  pageToken?: string;
+  readMask?: string;
 } {
   if (!args || typeof args !== 'object') {
     throw new Error('Invalid arguments: expected object');
@@ -126,14 +128,20 @@ function assertUpdateContactParams(args: any): asserts args is {
   if (!args.email || typeof args.email !== 'string') {
     throw new Error('Invalid arguments: email is required and must be a string');
   }
-  if (!args.resourceName || typeof args.resourceName !== 'string') {
-    throw new Error('Invalid arguments: resourceName is required and must be a string');
+  if (!args.personFields || typeof args.personFields !== 'string') {
+    throw new Error('Invalid arguments: personFields is required and must be a string');
   }
-  if (!args.contact || typeof args.contact !== 'object') {
-    throw new Error('Invalid arguments: contact is required and must be an object');
+  if (args.query !== undefined && typeof args.query !== 'string') {
+    throw new Error('Invalid arguments: query must be a string');
   }
-  if (args.updatePersonFields && typeof args.updatePersonFields !== 'string') {
-    throw new Error('Invalid arguments: updatePersonFields must be a string');
+  if (args.pageSize !== undefined && typeof args.pageSize !== 'number') {
+    throw new Error('Invalid arguments: pageSize must be a number');
+  }
+  if (args.pageToken !== undefined && typeof args.pageToken !== 'string') {
+    throw new Error('Invalid arguments: pageToken must be a string');
+  }
+  if (args.readMask !== undefined && typeof args.readMask !== 'string') {
+    throw new Error('Invalid arguments: readMask must be a string');
   }
 }
 
