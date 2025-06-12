@@ -1,136 +1,95 @@
-// Add these types to your existing contacts/types.ts file
-
-/**
- * Parameters for creating a new contact
- */
-export interface CreateContactParams {
+// Account Types
+export interface Account {
   email: string;
-  contact: {
-    names?: Array<{
-      givenName?: string;
-      familyName?: string;
-      displayName?: string;
-      middleName?: string;
-    }>;
-    emailAddresses?: Array<{
-      value: string;
-      type?: string;
-      formattedType?: string;
-    }>;
-    phoneNumbers?: Array<{
-      value: string;
-      type?: string;
-      formattedType?: string;
-    }>;
-    addresses?: Array<{
-      streetAddress?: string;
-      city?: string;
-      region?: string;
-      postalCode?: string;
-      country?: string;
-      type?: string;
-    }>;
-    organizations?: Array<{
-      name?: string;
-      title?: string;
-      department?: string;
-      type?: string;
-    }>;
-    biographies?: Array<{
-      value: string;
-      contentType?: string;
-    }>;
+  category: string;
+  description: string;
+  auth_status?: {
+    has_token: boolean;
+    scopes?: string[];
+    expires?: number;
   };
 }
 
-/**
- * Response from creating a contact
- */
-export interface CreateContactResponse {
-  resourceName: string;
-  etag: string;
-  contact: any; // Full contact object returned from API
+export interface AccountsConfig {
+  accounts: Account[];
 }
 
-/**
- * Parameters for updating an existing contact
- */
-export interface UpdateContactParams {
+// Token Types
+export interface TokenData {
+  access_token: string;
+  refresh_token: string;
+  scope: string;
+  token_type: string;
+  expiry_date: number;
+  last_refresh: number;
+}
+
+// OAuth Config Types
+export interface OAuthConfig {
+  client_id: string;
+  client_secret: string;
+  auth_uri: string;
+  token_uri: string;
+}
+
+// Authentication Types
+export interface GoogleAuthParams {
   email: string;
-  resourceName: string;
-  contact: {
-    etag?: string; // Required for updates to prevent conflicts
-    names?: Array<{
-      givenName?: string;
-      familyName?: string;
-      displayName?: string;
-      middleName?: string;
-    }>;
-    emailAddresses?: Array<{
-      value: string;
-      type?: string;
-      formattedType?: string;
-    }>;
-    phoneNumbers?: Array<{
-      value: string;
-      type?: string;
-      formattedType?: string;
-    }>;
-    addresses?: Array<{
-      streetAddress?: string;
-      city?: string;
-      region?: string;
-      postalCode?: string;
-      country?: string;
-      type?: string;
-    }>;
-    organizations?: Array<{
-      name?: string;
-      title?: string;
-      department?: string;
-      type?: string;
-    }>;
-    biographies?: Array<{
-      value: string;
-      contentType?: string;
-    }>;
-  };
-  updatePersonFields?: string; // Fields to update, e.g., 'names,emailAddresses,phoneNumbers'
+  category?: string;
+  description?: string;
+  required_scopes: string[];
+  auth_code?: string;
 }
 
-/**
- * Response from updating a contact
- */
-export interface UpdateContactResponse {
-  resourceName: string;
-  etag: string;
-  contact: any; // Full updated contact object returned from API
+// API Request Types
+export interface GoogleApiRequestParams extends GoogleAuthParams {
+  api_endpoint: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  params?: Record<string, any>;
 }
 
-/**
- * Parameters for deleting a contact
- */
-export interface DeleteContactParams {
-  email: string;
-  resourceName: string;
+// API Response Types
+export type GoogleApiResponse = 
+  | {
+      status: 'success';
+      data?: any;
+      message?: string;
+    }
+  | {
+      status: 'auth_required';
+      auth_url: string;
+      message?: string;
+      instructions: string;
+    }
+  | {
+      status: 'refreshing';
+      message: string;
+    }
+  | {
+      status: 'error';
+      error: string;
+      message?: string;
+      resolution?: string;
+    };
+
+// Error Types
+export class GoogleApiError extends Error {
+  constructor(
+    message: string,
+    public readonly code: string,
+    public readonly resolution?: string
+  ) {
+    super(message);
+    this.name = 'GoogleApiError';
+  }
 }
 
-/**
- * Parameters for searching contacts
- */
-export interface SearchContactsParams {
-  email: string;
-  query: string;
-  pageSize?: number;
-  readMask?: string;
-}
+// Utility Types
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-/**
- * Response from searching contacts
- */
-export interface SearchContactsResponse {
-  results?: Array<{
-    person: any; // Contact object
-  }>;
-  nextPageToken?: string;
+export interface ApiRequestParams {
+  endpoint: string;
+  method: HttpMethod;
+  params?: Record<string, any>;
+  token: string;
 }
