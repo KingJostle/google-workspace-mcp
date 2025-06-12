@@ -1,12 +1,10 @@
-import { scopeRegistry } from "../../modules/tools/scope-registry.js";
+// Update your contacts/scopes.ts file with this content
 
-// Define Contacts scopes as constants
-// Reference: https://developers.google.com/people/api/rest/v1/people.connections/list (and other People API docs)
 export const CONTACTS_SCOPES = {
-  READONLY: "https://www.googleapis.com/auth/contacts.readonly",
-  // Add other scopes like write/modify later if needed
-  // CONTACTS: 'https://www.googleapis.com/auth/contacts'
-};
+  READONLY: 'https://www.googleapis.com/auth/contacts.readonly',
+  READWRITE: 'https://www.googleapis.com/auth/contacts', // Full read/write access
+  OTHER_READONLY: 'https://www.googleapis.com/auth/contacts.other.readonly',
+  DIRECTORY_READONLY: 'https://www.googleapis.com/auth/directory.readonly'
+} as const;
 
-// Register the contacts scopes with the scope registry
-scopeRegistry.registerScope("contacts", CONTACTS_SCOPES.READONLY);
+export type ContactsScope = typeof CONTACTS_SCOPES[keyof typeof CONTACTS_SCOPES];
