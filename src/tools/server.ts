@@ -387,10 +387,15 @@ export class GSuiteServer {
             assertDeleteContactParams(args);
             result = await handleDeleteContact(args);
             break;
-          case 'search_workspace_contacts':
-            assertSearchContactsParams(args);
-            result = await handleSearchContacts(args);
-            break;
+    case 'search_workspace_contacts':
+  assertSearchContactsParams(args);
+  // Provide default empty string for query if undefined
+  const searchArgs = {
+    ...args,
+    query: args.query || ''
+  };
+  result = await handleSearchContacts(searchArgs);
+  break;
 
           default:
             throw new Error(`Unknown tool: ${request.params.name}`);
