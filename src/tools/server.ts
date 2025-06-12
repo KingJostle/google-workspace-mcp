@@ -1,3 +1,13 @@
+import {
+  SearchContactsParams,
+  CreateContactParams,
+  UpdateContactParams
+} from './types.js';
+import {
+  assertSearchContactsParams,
+  assertCreateContactParams,
+  assertUpdateContactParams
+} from './type-guards.js';
 // Add this import at the top of server.ts
 import {
   // ... your existing imports
