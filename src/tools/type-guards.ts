@@ -16,6 +16,11 @@ BaseToolArguments,
   ManageAttachmentParams
 } from './types.js';
 import {
+  GetContactsParams,
+  CreateContactParams,
+  UpdateContactParams,
+  SearchContactsParams
+} from '../modules/contacts/types.js';
   CreateContactParams,
   UpdateContactParams,
   DeleteContactParams,
@@ -339,7 +344,7 @@ export function assertManageDraftParams(args: unknown): asserts args is ManageDr
 export function isGetContactsParams(args: unknown): args is GetContactsParams {
   if (typeof args !== 'object' || args === null) return false;
   const params = args as Partial<GetContactsParams>;
-  
+
   return typeof params.email === 'string' &&
     typeof params.personFields === 'string' &&
     (params.pageSize === undefined || typeof params.pageSize === 'number') &&
@@ -351,21 +356,17 @@ export function assertGetContactsParams(args: unknown): asserts args is GetConta
     throw new Error('Invalid contacts parameters. Required: email, personFields');
   }
 }
-// in type-guards.ts
-import { SearchContactsParams, UpdateContactParams } from '../modules/contacts/types.js';
 
-export function isSearchContactsParams(args: unknown): args is SearchContactsParams {
+export function isCreateContactParams(args: unknown): args is CreateContactParams {
   if (typeof args !== 'object' || args === null) return false;
-  const p = args as Partial<SearchContactsParams>;
+  const p = args as Partial<CreateContactParams>;
   return typeof p.email === 'string'
-    && typeof p.query === 'string'
-    && (p.pageSize === undefined || typeof p.pageSize === 'number')
-    && (p.readMask === undefined || typeof p.readMask === 'string');
+    && typeof p.contact === 'object' && p.contact !== null;
 }
 
-export function assertSearchContactsParams(args: unknown): asserts args is SearchContactsParams {
-  if (!isSearchContactsParams(args)) {
-    throw new Error('Invalid search-contacts parameters. Required: email, query');
+export function assertCreateContactParams(args: unknown): asserts args is CreateContactParams {
+  if (!isCreateContactParams(args)) {
+    throw new Error('Invalid create-contact parameters. Required: email, contact');
   }
 }
 
@@ -380,5 +381,20 @@ export function isUpdateContactParams(args: unknown): args is UpdateContactParam
 export function assertUpdateContactParams(args: unknown): asserts args is UpdateContactParams {
   if (!isUpdateContactParams(args)) {
     throw new Error('Invalid update-contact parameters. Required: email, resourceName, contact');
+  }
+}
+
+export function isSearchContactsParams(args: unknown): args is SearchContactsParams {
+  if (typeof args !== 'object' || args === null) return false;
+  const p = args as Partial<SearchContactsParams>;
+  return typeof p.email === 'string'
+    && typeof p.query === 'string'
+    && (p.pageSize === undefined || typeof p.pageSize === 'number')
+    && (p.readMask === undefined || typeof p.readMask === 'string');
+}
+
+export function assertSearchContactsParams(args: unknown): asserts args is SearchContactsParams {
+  if (!isSearchContactsParams(args)) {
+    throw new Error('Invalid search-contacts parameters. Required: email, query');
   }
 }
