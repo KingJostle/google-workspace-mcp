@@ -1,3 +1,8 @@
+// Add this import at the top of server.ts
+import {
+  // ... your existing imports
+  SearchContactsParams
+} from './types.js';
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import logger from '../utils/logger.js';
@@ -387,14 +392,10 @@ export class GSuiteServer {
             assertDeleteContactParams(args);
             result = await handleDeleteContact(args);
             break;
-    case 'search_workspace_contacts':
+// Update your switch case
+case 'search_workspace_contacts':
   assertSearchContactsParams(args);
-  // Provide default empty string for query if undefined
-  const searchArgs = {
-    ...args,
-    query: args.query || ''
-  };
-  result = await handleSearchContacts(searchArgs);
+  result = await handleSearchContacts(args as SearchContactsParams);
   break;
 
           default:
