@@ -1,8 +1,85 @@
-// Add these types to your existing contacts/types.ts file
-
 /**
- * Parameters for creating a new contact
+ * Complete types for Google Contacts operations
  */
+
+// Original types for getting contacts
+export interface GetContactsParams {
+  email: string;
+  pageSize?: number;
+  pageToken?: string;
+  personFields: string;
+}
+
+export interface GetContactsResponse {
+  connections?: Array<{
+    resourceName: string;
+    etag: string;
+    names?: Array<{
+      metadata: any;
+      displayName: string;
+      familyName?: string;
+      givenName?: string;
+      middleName?: string;
+      displayNameLastFirst?: string;
+      unstructuredName?: string;
+    }>;
+    emailAddresses?: Array<{
+      metadata: any;
+      value: string;
+      type?: string;
+      formattedType?: string;
+      displayName?: string;
+    }>;
+    phoneNumbers?: Array<{
+      metadata: any;
+      value: string;
+      canonicalForm?: string;
+      type?: string;
+      formattedType?: string;
+    }>;
+    addresses?: Array<{
+      metadata: any;
+      streetAddress?: string;
+      city?: string;
+      region?: string;
+      postalCode?: string;
+      country?: string;
+      type?: string;
+      formattedType?: string;
+    }>;
+    organizations?: Array<{
+      metadata: any;
+      name?: string;
+      title?: string;
+      department?: string;
+      type?: string;
+      formattedType?: string;
+    }>;
+    biographies?: Array<{
+      metadata: any;
+      value: string;
+      contentType?: string;
+    }>;
+  }>;
+  nextPageToken?: string;
+  totalPeople?: number;
+  totalItems?: number;
+}
+
+// Custom error class for contacts operations
+export class ContactsError extends Error {
+  public readonly code: string;
+  public readonly details?: string;
+
+  constructor(message: string, code: string, details?: string) {
+    super(message);
+    this.name = 'ContactsError';
+    this.code = code;
+    this.details = details;
+  }
+}
+
+// New types for creating contacts
 export interface CreateContactParams {
   email: string;
   contact: {
@@ -43,18 +120,13 @@ export interface CreateContactParams {
   };
 }
 
-/**
- * Response from creating a contact
- */
 export interface CreateContactResponse {
   resourceName: string;
   etag: string;
   contact: any; // Full contact object returned from API
 }
 
-/**
- * Parameters for updating an existing contact
- */
+// Types for updating contacts
 export interface UpdateContactParams {
   email: string;
   resourceName: string;
@@ -98,26 +170,19 @@ export interface UpdateContactParams {
   updatePersonFields?: string; // Fields to update, e.g., 'names,emailAddresses,phoneNumbers'
 }
 
-/**
- * Response from updating a contact
- */
 export interface UpdateContactResponse {
   resourceName: string;
   etag: string;
   contact: any; // Full updated contact object returned from API
 }
 
-/**
- * Parameters for deleting a contact
- */
+// Types for deleting contacts
 export interface DeleteContactParams {
   email: string;
   resourceName: string;
 }
 
-/**
- * Parameters for searching contacts
- */
+// Types for searching contacts
 export interface SearchContactsParams {
   email: string;
   query: string;
@@ -125,9 +190,6 @@ export interface SearchContactsParams {
   readMask?: string;
 }
 
-/**
- * Response from searching contacts
- */
 export interface SearchContactsResponse {
   results?: Array<{
     person: any; // Contact object
