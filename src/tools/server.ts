@@ -50,8 +50,13 @@ import {
   handleDeleteDriveFile
 } from './drive-handlers.js';
 
-// Import contact handlers
-import { handleGetContacts } from './contacts-handlers.js';
+import { 
+  handleGetContacts,
+  handleCreateContact,
+  handleUpdateContact,
+  handleDeleteContact,
+  handleSearchContacts
+} from './contacts-handlers.js';
 
 // Import error types
 import { AccountError } from '../modules/accounts/types.js';
@@ -276,11 +281,27 @@ export class GSuiteServer {
             result = await handleDeleteDriveFile(args);
             break;
 
-          // Contact Operations
-          case 'get_workspace_contacts':
-            assertGetContactsParams(args);
-            result = await handleGetContacts(args);
-            break;
+            // Contact Operations
+case 'get_workspace_contacts':
+  assertGetContactsParams(args);
+  result = await handleGetContacts(args);
+  break;
+case 'create_workspace_contact':
+  assertBaseToolArguments(args);
+  result = await handleCreateContact(args);
+  break;
+case 'update_workspace_contact':
+  assertBaseToolArguments(args);
+  result = await handleUpdateContact(args);
+  break;
+case 'delete_workspace_contact':
+  assertBaseToolArguments(args);
+  result = await handleDeleteContact(args);
+  break;
+case 'search_workspace_contacts':
+  assertBaseToolArguments(args);
+  result = await handleSearchContacts(args);
+  break;
 
           default:
             throw new Error(`Unknown tool: ${request.params.name}`);
