@@ -129,7 +129,7 @@ function assertCreateContactParams(args: any): asserts args is { email: string; 
   }
 }
 
-function assertSearchContactsParams(args: any): asserts args is { 
+function assertSearchContactsParams(args: unknown): asserts args is { 
   email: string; 
   personFields: string;
   query?: string;  // Optional - matches tool definition
