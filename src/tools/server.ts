@@ -281,7 +281,7 @@ export class GSuiteServer {
             result = await handleDeleteDriveFile(args);
             break;
 
-            // Contact Operations
+// Contact Operations
 case 'get_workspace_contacts':
   assertGetContactsParams(args);
   result = await handleGetContacts(args);
