@@ -346,3 +346,34 @@ export function assertGetContactsParams(args: unknown): asserts args is GetConta
     throw new Error('Invalid contacts parameters. Required: email, personFields');
   }
 }
+// in type-guards.ts
+import { SearchContactsParams, UpdateContactParams } from '../modules/contacts/types.js';
+
+export function isSearchContactsParams(args: unknown): args is SearchContactsParams {
+  if (typeof args !== 'object' || args === null) return false;
+  const p = args as Partial<SearchContactsParams>;
+  return typeof p.email === 'string'
+    && typeof p.query === 'string'
+    && (p.pageSize === undefined || typeof p.pageSize === 'number')
+    && (p.readMask === undefined || typeof p.readMask === 'string');
+}
+
+export function assertSearchContactsParams(args: unknown): asserts args is SearchContactsParams {
+  if (!isSearchContactsParams(args)) {
+    throw new Error('Invalid search-contacts parameters. Required: email, query');
+  }
+}
+
+export function isUpdateContactParams(args: unknown): args is UpdateContactParams {
+  if (typeof args !== 'object' || args === null) return false;
+  const p = args as Partial<UpdateContactParams>;
+  return typeof p.email === 'string'
+    && typeof p.resourceName === 'string'
+    && typeof p.contact === 'object' && p.contact !== null;
+}
+
+export function assertUpdateContactParams(args: unknown): asserts args is UpdateContactParams {
+  if (!isUpdateContactParams(args)) {
+    throw new Error('Invalid update-contact parameters. Required: email, resourceName, contact');
+  }
+}
