@@ -15,7 +15,12 @@ BaseToolArguments,
   DriveDeleteArgs,
   ManageAttachmentParams
 } from './types.js';
-import { GetContactsParams } from '../modules/contacts/types.js';
+import {
+  CreateContactParams,
+  UpdateContactParams,
+  DeleteContactParams,
+  SearchContactsParams
+} from '../modules/contacts/types.js'; //
 
 // Base Tool Arguments
 export function isBaseToolArguments(args: Record<string, unknown>): args is BaseToolArguments {
