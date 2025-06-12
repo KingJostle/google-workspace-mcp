@@ -3,16 +3,13 @@ import {
   CreateContactParams,
   UpdateContactParams
 } from '../modules/contacts/types.js';
+
 import {
   assertSearchContactsParams,
   assertCreateContactParams,
   assertUpdateContactParams
 } from './type-guards.js';
-// Add this import at the top of server.ts
-import {
-  // ... your existing imports
-  SearchContactsParams
-} from './types.js';
+
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import logger from '../utils/logger.js';
