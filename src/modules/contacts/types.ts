@@ -196,15 +196,4 @@ export interface SearchContactsResponse {
   }>;
   nextPageToken?: string;
 }
-export {
-  GetContactsParams,
-  GetContactsResponse,
-  CreateContactParams,
-  CreateContactResponse,
-  UpdateContactParams,
-  UpdateContactResponse,
-  DeleteContactParams,
-  SearchContactsParams,
-  SearchContactsResponse,
-  ContactsError
-};
+
