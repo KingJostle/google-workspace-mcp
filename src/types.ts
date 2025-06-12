@@ -93,3 +93,22 @@ export interface ApiRequestParams {
   params?: Record<string, any>;
   token: string;
 }
+// Add this to the end of your tools/types.ts file
+
+// Contact Types
+/**
+ * Parameters for searching contacts
+ * @property email - Google account email
+ * @property personFields - Comma-separated fields to include in response
+ * @property query - Optional search query string
+ * @property pageSize - Optional maximum number of contacts to return
+ * @property pageToken - Optional token for pagination
+ * @property readMask - Optional read mask to limit returned fields
+ */
+export interface SearchContactsParams extends BaseToolArguments {
+  personFields: string;
+  query?: string;  // Optional - this fixes the type error
+  pageSize?: number;
+  pageToken?: string;
+  readMask?: string;
+}
