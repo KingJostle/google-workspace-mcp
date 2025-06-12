@@ -2,7 +2,7 @@ import {
   SearchContactsParams,
   CreateContactParams,
   UpdateContactParams
-} from './types.js';
+} from '../modules/contacts/types.js';
 import {
   assertSearchContactsParams,
   assertCreateContactParams,
