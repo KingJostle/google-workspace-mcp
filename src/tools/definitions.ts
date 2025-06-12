@@ -1366,6 +1366,8 @@ export const driveTools: ToolMetadata[] = [
 ];
 
 // Define Contacts Tools
+// Replace the existing contactsTools array in definitions.ts with this updated version:
+
 export const contactsTools: ToolMetadata[] = [
   {
     name: "get_workspace_contacts",
@@ -1411,6 +1413,366 @@ export const contactsTools: ToolMetadata[] = [
         pageToken: {
           type: "string",
           description: "Page token from a previous response (for pagination)"
+        }
+      },
+      required: ["email", "personFields"]
+    }
+  },
+  {
+    name: "create_workspace_contact",
+    category: "Contacts",
+    description: `Create a new contact in a Google account.
+
+    IMPORTANT: Before using this tool:
+    1. Verify account access with list_workspace_accounts
+    2. Confirm account if multiple exist
+    3. Check required scopes include Contacts write access
+
+    Features:
+    - Create contacts with names, emails, phone numbers
+    - Set additional contact information
+    - Organize contacts with proper formatting
+
+    Example Flow:
+    1. Check account access
+    2. Validate contact data
+    3. Create contact and return details`,
+    aliases: ["create_contact", "add_contact", "new_contact"],
+    inputSchema: {
+      type: "object",
+      properties: {
+        email: {
+          type: "string",
+          description: "Email address of the Google account"
+        },
+        contact: {
+          type: "object",
+          properties: {
+            names: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  givenName: {
+                    type: "string",
+                    description: "First name"
+                  },
+                  familyName: {
+                    type: "string",
+                    description: "Last name"
+                  },
+                  displayName: {
+                    type: "string",
+                    description: "Full display name"
+                  }
+                }
+              },
+              description: "Array of name objects"
+            },
+            emailAddresses: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  value: {
+                    type: "string",
+                    description: "Email address"
+                  },
+                  type: {
+                    type: "string",
+                    description: "Email type (e.g., work, home, other)"
+                  }
+                },
+                required: ["value"]
+              },
+              description: "Array of email address objects"
+            },
+            phoneNumbers: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  value: {
+                    type: "string",
+                    description: "Phone number"
+                  },
+                  type: {
+                    type: "string",
+                    description: "Phone type (e.g., work, home, mobile)"
+                  }
+                },
+                required: ["value"]
+              },
+              description: "Array of phone number objects"
+            },
+            organizations: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                    description: "Organization name"
+                  },
+                  title: {
+                    type: "string",
+                    description: "Job title"
+                  }
+                }
+              },
+              description: "Array of organization objects"
+            },
+            addresses: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  formattedValue: {
+                    type: "string",
+                    description: "Full formatted address"
+                  },
+                  type: {
+                    type: "string",
+                    description: "Address type (e.g., work, home)"
+                  }
+                }
+              },
+              description: "Array of address objects"
+            }
+          },
+          description: "Contact information to create"
+        }
+      },
+      required: ["email", "contact"]
+    }
+  },
+  {
+    name: "update_workspace_contact",
+    category: "Contacts",
+    description: `Update an existing contact in a Google account.
+
+    IMPORTANT: Before using this tool:
+    1. Verify account access with list_workspace_accounts
+    2. Confirm account if multiple exist
+    3. Check required scopes include Contacts write access
+    4. Verify contact exists using resourceName
+
+    Features:
+    - Update any contact field
+    - Modify names, emails, phone numbers
+    - Update organizational information
+    - Preserve existing data not being updated
+
+    Example Flow:
+    1. Check account access
+    2. Validate contact exists
+    3. Update specified fields
+    4. Return updated contact details`,
+    aliases: ["update_contact", "modify_contact", "edit_contact"],
+    inputSchema: {
+      type: "object",
+      properties: {
+        email: {
+          type: "string",
+          description: "Email address of the Google account"
+        },
+        resourceName: {
+          type: "string",
+          description: "Resource name of the contact to update (e.g., people/contactId)"
+        },
+        contact: {
+          type: "object",
+          properties: {
+            names: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  givenName: {
+                    type: "string",
+                    description: "First name"
+                  },
+                  familyName: {
+                    type: "string",
+                    description: "Last name"
+                  },
+                  displayName: {
+                    type: "string",
+                    description: "Full display name"
+                  }
+                }
+              },
+              description: "Array of name objects"
+            },
+            emailAddresses: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  value: {
+                    type: "string",
+                    description: "Email address"
+                  },
+                  type: {
+                    type: "string",
+                    description: "Email type (e.g., work, home, other)"
+                  }
+                },
+                required: ["value"]
+              },
+              description: "Array of email address objects"
+            },
+            phoneNumbers: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  value: {
+                    type: "string",
+                    description: "Phone number"
+                  },
+                  type: {
+                    type: "string",
+                    description: "Phone type (e.g., work, home, mobile)"
+                  }
+                },
+                required: ["value"]
+              },
+              description: "Array of phone number objects"
+            },
+            organizations: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                    description: "Organization name"
+                  },
+                  title: {
+                    type: "string",
+                    description: "Job title"
+                  }
+                }
+              },
+              description: "Array of organization objects"
+            },
+            addresses: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  formattedValue: {
+                    type: "string",
+                    description: "Full formatted address"
+                  },
+                  type: {
+                    type: "string",
+                    description: "Address type (e.g., work, home)"
+                  }
+                }
+              },
+              description: "Array of address objects"
+            }
+          },
+          description: "Contact information to update"
+        },
+        updatePersonFields: {
+          type: "string",
+          description: "Comma-separated fields to update (e.g., 'names,emailAddresses,phoneNumbers')"
+        }
+      },
+      required: ["email", "resourceName", "contact"]
+    }
+  },
+  {
+    name: "delete_workspace_contact",
+    category: "Contacts",
+    description: `Delete a contact from a Google account.
+
+    IMPORTANT: Before using this tool:
+    1. Verify account access with list_workspace_accounts
+    2. Confirm account if multiple exist
+    3. Check required scopes include Contacts write access
+    4. Verify contact exists using resourceName
+    5. Confirm deletion is intended (this action cannot be undone)
+
+    Warning: This permanently deletes the contact from the account.
+
+    Example Flow:
+    1. Check account access
+    2. Validate contact exists
+    3. Confirm deletion intent
+    4. Delete contact and confirm success`,
+    aliases: ["delete_contact", "remove_contact", "trash_contact"],
+    inputSchema: {
+      type: "object",
+      properties: {
+        email: {
+          type: "string",
+          description: "Email address of the Google account"
+        },
+        resourceName: {
+          type: "string",
+          description: "Resource name of the contact to delete (e.g., people/contactId)"
+        }
+      },
+      required: ["email", "resourceName"]
+    }
+  },
+  {
+    name: "search_workspace_contacts",
+    category: "Contacts",
+    description: `Search for contacts in a Google account with advanced filtering.
+
+    IMPORTANT: Before using this tool:
+    1. Verify account access with list_workspace_accounts
+    2. Confirm account if multiple exist
+    3. Check required scopes include Contacts read access
+
+    Search Capabilities:
+    - Search by name, email, phone number
+    - Filter by contact fields
+    - Paginated results for large contact lists
+    - Sort and organize results
+
+    Common Search Patterns:
+    - Name search: Query by first name, last name, or display name
+    - Email search: Find contacts by email domain or specific address
+    - Phone search: Search by phone number patterns
+    - Organization search: Find contacts by company or job title
+
+    Example Flow:
+    1. Check account access
+    2. Apply search criteria
+    3. Return matching contacts with requested fields`,
+    aliases: ["search_contacts", "find_contacts", "query_contacts"],
+    inputSchema: {
+      type: "object",
+      properties: {
+        email: {
+          type: "string",
+          description: "Email address of the Google account"
+        },
+        query: {
+          type: "string",
+          description: "Search query string (searches across names, emails, phone numbers)"
+        },
+        personFields: {
+          type: "string",
+          description: 'Comma-separated fields to include in the response (e.g. "names,emailAddresses,phoneNumbers")'
+        },
+        pageSize: {
+          type: "number",
+          description: "Maximum number of contacts to return (default: 10)"
+        },
+        pageToken: {
+          type: "string",
+          description: "Page token from a previous response (for pagination)"
+        },
+        readMask: {
+          type: "string",
+          description: "Optional read mask to limit returned fields"
         }
       },
       required: ["email", "personFields"]
