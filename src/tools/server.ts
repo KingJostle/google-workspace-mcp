@@ -101,6 +101,88 @@ import {
   assertGetContactsParams
 } from './type-guards.js';
 
+// Contact Parameter Assertion Functions
+function assertCreateContactParams(args: any): asserts args is { email: string; contact: any } {
+  if (!args || typeof args !== 'object') {
+    throw new Error('Invalid arguments: expected object');
+  }
+  if (!args.email || typeof args.email !== 'string') {
+    throw new Error('Invalid arguments: email is required and must be a string');
+  }
+  if (!args.contact || typeof args.contact !== 'object') {
+    throw new Error('Invalid arguments: contact is required and must be an object');
+  }
+}
+
+function assertUpdateContactParams(args: any): asserts args is { 
+  email: string; 
+  resourceName: string; 
+  contact: any; 
+  updatePersonFields?: string 
+} {
+  if (!args || typeof args !== 'object') {
+    throw new Error('Invalid arguments: expected object');
+  }
+  if (!args.email || typeof args.email !== 'string') {
+    throw new Error('Invalid arguments: email is required and must be a string');
+  }
+  if (!args.resourceName || typeof args.resourceName !== 'string') {
+    throw new Error('Invalid arguments: resourceName is required and must be a string');
+  }
+  if (!args.contact || typeof args.contact !== 'object') {
+    throw new Error('Invalid arguments: contact is required and must be an object');
+  }
+  if (args.updatePersonFields && typeof args.updatePersonFields !== 'string') {
+    throw new Error('Invalid arguments: updatePersonFields must be a string');
+  }
+}
+
+function assertDeleteContactParams(args: any): asserts args is { 
+  email: string; 
+  resourceName: string 
+} {
+  if (!args || typeof args !== 'object') {
+    throw new Error('Invalid arguments: expected object');
+  }
+  if (!args.email || typeof args.email !== 'string') {
+    throw new Error('Invalid arguments: email is required and must be a string');
+  }
+  if (!args.resourceName || typeof args.resourceName !== 'string') {
+    throw new Error('Invalid arguments: resourceName is required and must be a string');
+  }
+}
+
+function assertSearchContactsParams(args: any): asserts args is { 
+  email: string; 
+  personFields: string;
+  query?: string;
+  pageSize?: number;
+  pageToken?: string;
+  readMask?: string;
+} {
+  if (!args || typeof args !== 'object') {
+    throw new Error('Invalid arguments: expected object');
+  }
+  if (!args.email || typeof args.email !== 'string') {
+    throw new Error('Invalid arguments: email is required and must be a string');
+  }
+  if (!args.personFields || typeof args.personFields !== 'string') {
+    throw new Error('Invalid arguments: personFields is required and must be a string');
+  }
+  if (args.query && typeof args.query !== 'string') {
+    throw new Error('Invalid arguments: query must be a string');
+  }
+  if (args.pageSize && typeof args.pageSize !== 'number') {
+    throw new Error('Invalid arguments: pageSize must be a number');
+  }
+  if (args.pageToken && typeof args.pageToken !== 'string') {
+    throw new Error('Invalid arguments: pageToken must be a string');
+  }
+  if (args.readMask && typeof args.readMask !== 'string') {
+    throw new Error('Invalid arguments: readMask must be a string');
+  }
+}
+
 export class GSuiteServer {
   private server: Server;
   private toolRegistry: ToolRegistry;
@@ -209,7 +291,6 @@ export class GSuiteServer {
             assertManageDraftParams(args);
             result = await handleManageWorkspaceDraft(args as ManageDraftParams);
             break;
-
           case 'manage_workspace_attachment':
             assertManageAttachmentParams(args);
             result = await handleManageWorkspaceAttachment(args as ManageAttachmentParams);
@@ -281,27 +362,27 @@ export class GSuiteServer {
             result = await handleDeleteDriveFile(args);
             break;
 
-// Contact Operations
-case 'get_workspace_contacts':
-  assertGetContactsParams(args);
-  result = await handleGetContacts(args);
-  break;
-case 'create_workspace_contact':
-  assertBaseToolArguments(args);
-  result = await handleCreateContact(args);
-  break;
-case 'update_workspace_contact':
-  assertBaseToolArguments(args);
-  result = await handleUpdateContact(args);
-  break;
-case 'delete_workspace_contact':
-  assertBaseToolArguments(args);
-  result = await handleDeleteContact(args);
-  break;
-case 'search_workspace_contacts':
-  assertBaseToolArguments(args);
-  result = await handleSearchContacts(args);
-  break;
+          // Contact Operations
+          case 'get_workspace_contacts':
+            assertGetContactsParams(args);
+            result = await handleGetContacts(args);
+            break;
+          case 'create_workspace_contact':
+            assertCreateContactParams(args);
+            result = await handleCreateContact(args);
+            break;
+          case 'update_workspace_contact':
+            assertUpdateContactParams(args);
+            result = await handleUpdateContact(args);
+            break;
+          case 'delete_workspace_contact':
+            assertDeleteContactParams(args);
+            result = await handleDeleteContact(args);
+            break;
+          case 'search_workspace_contacts':
+            assertSearchContactsParams(args);
+            result = await handleSearchContacts(args);
+            break;
 
           default:
             throw new Error(`Unknown tool: ${request.params.name}`);
