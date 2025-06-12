@@ -43,9 +43,11 @@ export interface GoogleAuthParams {
 
 // API Request Types
 export interface GoogleApiRequestParams extends GoogleAuthParams {
-  api_endpoint: string;
+  api_endpoint: string; // required for legacy usage
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   params?: Record<string, any>;
+  token: string;         // required by request.ts
+  endpoint: string;      // expected by handler.ts (alias of api_endpoint)
 }
 
 // API Response Types
