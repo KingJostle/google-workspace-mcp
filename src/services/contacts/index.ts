@@ -7,6 +7,11 @@ import { McpError } from "@modelcontextprotocol/sdk/types.js";
 import {
   GetContactsParams,
   GetContactsResponse,
+  CreateContactParams,
+  CreateContactResponse,
+  UpdateContactParams,
+  UpdateContactResponse,
+  DeleteContactParams,
   ContactsError
 } from "../../modules/contacts/types.js";
 import { CONTACTS_SCOPES } from "../../modules/contacts/scopes.js";
@@ -102,7 +107,183 @@ export class ContactsService extends BaseGoogleService<PeopleApiClient> {
     }
   }
 
-  // Add other methods like searchContacts, createContact, updateContact, deleteContact later
+  /**
+   * Creates a new contact
+   */
+  async createContact(params: CreateContactParams): Promise<CreateContactResponse> {
+    const { email, contact } = params;
+
+    if (!contact) {
+      throw new ContactsError(
+        "Missing required parameter: contact",
+        "INVALID_PARAMS",
+        "Contact data is required to create a contact"
+      );
+    }
+
+    try {
+      // Ensure write scope is granted
+      await this.validateScopes(email, [CONTACTS_SCOPES.READWRITE]);
+
+      const peopleApi = await this.getPeopleClient(email);
+
+      const response = await peopleApi.people.createContact({
+        requestBody: contact
+      });
+
+      if (!response.data.resourceName) {
+        throw new ContactsError(
+          "Failed to create contact",
+          "CREATE_ERROR",
+          "Contact creation response was incomplete"
+        );
+      }
+
+      return {
+        resourceName: response.data.resourceName,
+        etag: response.data.etag || '',
+        contact: response.data
+      };
+    } catch (error) {
+      throw this.handleContactError(error, 'Failed to create contact');
+    }
+  }
+
+  /**
+   * Updates an existing contact
+   */
+  async updateContact(params: UpdateContactParams): Promise<UpdateContactResponse> {
+    const { email, resourceName, contact, updatePersonFields } = params;
+
+    if (!resourceName || !contact) {
+      throw new ContactsError(
+        "Missing required parameters: resourceName and contact",
+        "INVALID_PARAMS",
+        "Both resourceName and contact data are required to update a contact"
+      );
+    }
+
+    try {
+      // Ensure write scope is granted
+      await this.validateScopes(email, [CONTACTS_SCOPES.READWRITE]);
+
+      const peopleApi = await this.getPeopleClient(email);
+
+      const response = await peopleApi.people.updateContact({
+        resourceName,
+        updatePersonFields: updatePersonFields || 'names,emailAddresses,phoneNumbers',
+        requestBody: contact
+      });
+
+      if (!response.data.resourceName) {
+        throw new ContactsError(
+          "Failed to update contact",
+          "UPDATE_ERROR",
+          "Contact update response was incomplete"
+        );
+      }
+
+      return {
+        resourceName: response.data.resourceName,
+        etag: response.data.etag || '',
+        contact: response.data
+      };
+    } catch (error) {
+      throw this.handleContactError(error, 'Failed to update contact');
+    }
+  }
+
+  /**
+   * Deletes a contact
+   */
+  async deleteContact(params: DeleteContactParams): Promise<void> {
+    const { email, resourceName } = params;
+
+    if (!resourceName) {
+      throw new ContactsError(
+        "Missing required parameter: resourceName",
+        "INVALID_PARAMS",
+        "resourceName is required to delete a contact"
+      );
+    }
+
+    try {
+      // Ensure write scope is granted
+      await this.validateScopes(email, [CONTACTS_SCOPES.READWRITE]);
+
+      const peopleApi = await this.getPeopleClient(email);
+
+      await peopleApi.people.deleteContact({
+        resourceName
+      });
+
+      // Delete operation returns no data on success
+    } catch (error) {
+      throw this.handleContactError(error, 'Failed to delete contact');
+    }
+  }
+
+  /**
+   * Search contacts by query
+   */
+  async searchContacts(params: {
+    email: string;
+    query: string;
+    pageSize?: number;
+    readMask?: string;
+  }): Promise<any> {
+    const { email, query, pageSize = 10, readMask = 'names,emailAddresses,phoneNumbers' } = params;
+
+    if (!query) {
+      throw new ContactsError(
+        "Missing required parameter: query",
+        "INVALID_PARAMS",
+        "Search query is required"
+      );
+    }
+
+    try {
+      await this.validateScopes(email, [CONTACTS_SCOPES.READONLY]);
+
+      const peopleApi = await this.getPeopleClient(email);
+
+      const response = await peopleApi.people.searchContacts({
+        query,
+        pageSize,
+        readMask
+      });
+
+      return response.data;
+    } catch (error) {
+      throw this.handleContactError(error, 'Failed to search contacts');
+    }
+  }
+
+  /**
+   * Helper method to handle contact-related errors consistently
+   */
+  private handleContactError(error: any, message: string): ContactsError {
+    if (error instanceof GoogleServiceError) {
+      const gError = error as McpError & {
+        data?: { code?: string; details?: string };
+      };
+      return new ContactsError(
+        gError.message || message,
+        gError.data?.code || "GOOGLE_SERVICE_ERROR",
+        gError.data?.details
+      );
+    } else if (error instanceof Error) {
+      return new ContactsError(
+        `${message}: ${error.message}`,
+        "UNKNOWN_API_ERROR"
+      );
+    } else {
+      return new ContactsError(
+        `${message} due to an unknown issue`,
+        "UNKNOWN_INTERNAL_ERROR"
+      );
+    }
+  }
 }
 
 // Optional: Export a singleton instance if needed by the module structure
