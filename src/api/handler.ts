@@ -45,6 +45,7 @@ export class RequestHandler {
   private async executeRequest(params: GoogleApiRequestParams, token: string): Promise<any> {
 return this.apiRequest.makeRequest({
   api_endpoint: params.api_endpoint,
+  endpoint: params.api_endpoint, // <-- FIXED
   method: params.method,
   params: params.params,
   token: token,
