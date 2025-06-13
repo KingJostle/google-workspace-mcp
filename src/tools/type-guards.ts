@@ -395,14 +395,4 @@ export function assertSearchContactsParams(args: unknown): asserts args is Searc
     throw new Error('Invalid search-contacts parameters. Required: email, query');
   }
 }
-export function assertDeleteContactParams(args: unknown): asserts args is DeleteContactParams {
-  if (!args || typeof args !== 'object') {
-    throw new Error('Invalid arguments: expected object');
-  }
-  if (!('email' in args) || typeof (args as any).email !== 'string') {
-    throw new Error('Invalid arguments: email is required and must be a string');
-  }
-  if (!('resourceName' in args) || typeof (args as any).resourceName !== 'string') {
-    throw new Error('Invalid arguments: resourceName is required and must be a string');
-  }
-}
+
