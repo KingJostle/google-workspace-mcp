@@ -43,12 +43,14 @@ export class RequestHandler {
   }
 
   private async executeRequest(params: GoogleApiRequestParams, token: string): Promise<any> {
-    return this.apiRequest.makeRequest({
-      endpoint: params.api_endpoint,
-      method: params.method,
-      params: params.params,
-      token
-    });
+return this.apiRequest.makeRequest({
+  api_endpoint: params.api_endpoint,
+  method: params.method,
+  params: params.params,
+  token: token,
+  email: params.email,
+  required_scopes: params.required_scopes
+});
   }
 
   private formatSuccessResponse(data: any): GoogleApiResponse {
