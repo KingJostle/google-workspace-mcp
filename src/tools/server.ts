@@ -306,10 +306,6 @@ export class GSuiteServer {
             assertUpdateContactParams(args);
             result = await handleUpdateContact(args);
             break;
-          case 'delete_workspace_contact':
-            assertDeleteContactParams(args);
-            result = await handleDeleteContact(args);
-            break;
 // Update your switch case
 case 'search_workspace_contacts':
   assertSearchContactsParams(args);
