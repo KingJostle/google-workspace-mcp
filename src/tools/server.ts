@@ -8,7 +8,6 @@ import {
   assertSearchContactsParams,
   assertCreateContactParams,
   assertUpdateContactParams,
-  assertDeleteContactParams
 } from './type-guards.js';
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
