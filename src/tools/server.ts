@@ -7,7 +7,8 @@ import {
 import {
   assertSearchContactsParams,
   assertCreateContactParams,
-  assertUpdateContactParams
+  assertUpdateContactParams,
+  assertDeleteContactParams
 } from './type-guards.js';
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -113,95 +114,6 @@ import {
   assertGetContactsParams
 } from './type-guards.js';
 
-// Contact Parameter Assertion Functions
-function assertCreateContactParams(args: any): asserts args is { email: string; contact: any } {
-  if (!args || typeof args !== 'object') {
-    throw new Error('Invalid arguments: expected object');
-  }
-  if (!args.email || typeof args.email !== 'string') {
-    throw new Error('Invalid arguments: email is required and must be a string');
-  }
-  if (!args.contact || typeof args.contact !== 'object') {
-    throw new Error('Invalid arguments: contact is required and must be an object');
-  }
-}
-
-function assertSearchContactsParams(args: unknown): asserts args is { 
-  email: string; 
-  personFields: string;
-  query?: string;  // Optional - matches tool definition
-  pageSize?: number;
-  pageToken?: string;
-  readMask?: string;
-} {
-  if (!args || typeof args !== 'object') {
-    throw new Error('Invalid arguments: expected object');
-  }
-  if (!args.email || typeof args.email !== 'string') {
-    throw new Error('Invalid arguments: email is required and must be a string');
-  }
-  if (!args.personFields || typeof args.personFields !== 'string') {
-    throw new Error('Invalid arguments: personFields is required and must be a string');
-  }
-  if (args.query !== undefined && typeof args.query !== 'string') {
-    throw new Error('Invalid arguments: query must be a string');
-  }
-  if (args.pageSize !== undefined && typeof args.pageSize !== 'number') {
-    throw new Error('Invalid arguments: pageSize must be a number');
-  }
-  if (args.pageToken !== undefined && typeof args.pageToken !== 'string') {
-    throw new Error('Invalid arguments: pageToken must be a string');
-  }
-  if (args.readMask !== undefined && typeof args.readMask !== 'string') {
-    throw new Error('Invalid arguments: readMask must be a string');
-  }
-}
-
-function assertDeleteContactParams(args: any): asserts args is { 
-  email: string; 
-  resourceName: string 
-} {
-  if (!args || typeof args !== 'object') {
-    throw new Error('Invalid arguments: expected object');
-  }
-  if (!args.email || typeof args.email !== 'string') {
-    throw new Error('Invalid arguments: email is required and must be a string');
-  }
-  if (!args.resourceName || typeof args.resourceName !== 'string') {
-    throw new Error('Invalid arguments: resourceName is required and must be a string');
-  }
-}
-
-function assertSearchContactsParams(args: any): asserts args is { 
-  email: string; 
-  personFields: string;
-  query?: string;
-  pageSize?: number;
-  pageToken?: string;
-  readMask?: string;
-} {
-  if (!args || typeof args !== 'object') {
-    throw new Error('Invalid arguments: expected object');
-  }
-  if (!args.email || typeof args.email !== 'string') {
-    throw new Error('Invalid arguments: email is required and must be a string');
-  }
-  if (!args.personFields || typeof args.personFields !== 'string') {
-    throw new Error('Invalid arguments: personFields is required and must be a string');
-  }
-  if (args.query && typeof args.query !== 'string') {
-    throw new Error('Invalid arguments: query must be a string');
-  }
-  if (args.pageSize && typeof args.pageSize !== 'number') {
-    throw new Error('Invalid arguments: pageSize must be a number');
-  }
-  if (args.pageToken && typeof args.pageToken !== 'string') {
-    throw new Error('Invalid arguments: pageToken must be a string');
-  }
-  if (args.readMask && typeof args.readMask !== 'string') {
-    throw new Error('Invalid arguments: readMask must be a string');
-  }
-}
 
 export class GSuiteServer {
   private server: Server;
